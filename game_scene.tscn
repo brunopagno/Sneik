@@ -1,0 +1,61 @@
+[gd_scene load_steps=10 format=3 uid="uid://bnaja1c7gl5js"]
+
+[ext_resource type="PackedScene" uid="uid://ybk4f486o4rl" path="res://Sneik/sneik.tscn" id="1_0ntm1"]
+[ext_resource type="Script" path="res://Sneik/sneik.gd" id="2_dera3"]
+[ext_resource type="Texture2D" uid="uid://cqvil4026utvs" path="res://Sneik/head.png" id="3_8iqlv"]
+[ext_resource type="Texture2D" uid="uid://pcua7jj61cb" path="res://Sneik/body.png" id="4_dtmeb"]
+[ext_resource type="Texture2D" uid="uid://cmb0mlpxuworg" path="res://Food/food.png" id="5_i5tq7"]
+[ext_resource type="Script" path="res://Food/Food.gd" id="5_y38ic"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lil8l"]
+radius = 15.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y00ya"]
+radius = 12.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_crjpq"]
+radius = 25.0
+
+[node name="GameScene" type="Node"]
+
+[node name="Sneik" parent="." instance=ExtResource("1_0ntm1")]
+script = ExtResource("2_dera3")
+
+[node name="Head" type="CharacterBody2D" parent="Sneik"]
+position = Vector2(576, 312)
+
+[node name="Sprite2D" type="Sprite2D" parent="Sneik/Head"]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_8iqlv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sneik/Head"]
+shape = SubResource("CircleShape2D_lil8l")
+
+[node name="BodyNodes" type="Node" parent="Sneik"]
+
+[node name="BodyRef" type="Area2D" parent="Sneik"]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Sneik/BodyRef"]
+scale = Vector2(0.18, 0.18)
+texture = ExtResource("4_dtmeb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sneik/BodyRef"]
+shape = SubResource("CircleShape2D_y00ya")
+
+[node name="Food" type="Node" parent="."]
+script = ExtResource("5_y38ic")
+
+[node name="FoodObj" type="Area2D" parent="Food"]
+position = Vector2(355, 395)
+
+[node name="Sprite2D" type="Sprite2D" parent="Food/FoodObj"]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("5_i5tq7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Food/FoodObj"]
+shape = SubResource("CircleShape2D_crjpq")
+
+[connection signal="body_entered" from="Sneik/BodyRef" to="Sneik" method="_on_hit_own_body"]
+[connection signal="body_entered" from="Food/FoodObj" to="Sneik" method="_on_eat_food"]
+[connection signal="body_entered" from="Food/FoodObj" to="Food" method="_on_eat_food"]
